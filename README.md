@@ -14,7 +14,7 @@ An AI-powered CV analysis tool that matches CVs against job descriptions, using 
   <br>
   <img src="screenshots/analysis-results-SJ-AIIS.png" alt="Analysis Results SJ AIIS" width="350" style="margin-bottom: 20px;"/>
   <br>
-  <img src="screenshots/recommendations-AIIS.png" alt="Recommendations AIIS" width="350"/>
+  <img src="screenshots/recommendations-AIIS.png" alt="Recommendations AIIS" width="350" style="margin-bottom: 20px;"/>
 </div>
 
 ## Features
