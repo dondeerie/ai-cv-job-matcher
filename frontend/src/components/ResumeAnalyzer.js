@@ -2,75 +2,81 @@ import React, { useState } from 'react';
 
 const ResumeAnalyzer = () => {
     const [file, setFile] = useState(null);
+    const [selectedRole, setSelectedRole] = useState('ai_implementation');
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const roles = {
+        ai_implementation: "AI Implementation Specialist",
+        project_manager: "Project Manager"
+    };
+
     const handleFileUpload = (event) => {
         const uploadedFile = event.target.files[0];
-        console.log("File details:", {
-            name: uploadedFile.name,
-            type: uploadedFile.type,
-            size: uploadedFile.size,
-            lastModified: new Date(uploadedFile.lastModified),
-            extension: uploadedFile.name.split('.').pop()
-        });
         setFile(uploadedFile);
+    };
+
+    const handleRoleChange = (event) => {
+        setSelectedRole(event.target.value);
     };
 
     const analyzeResume = async () => {
         if (!file) return;
         
-        console.log("Starting analysis of file:", {
-            name: file.name,
-            type: file.type,
-            size: file.size
-        });
-        
         setLoading(true);
         try {
             const formData = new FormData();
             formData.append('file', file);
-        
-                console.log('Attempting to send file...'); // Add this debug log
+            formData.append('role', selectedRole);
 
-                console.log('Attempting to send file:', file);
-        
-                const response = await fetch('http://localhost:8001/analyze-resume', {
-                    method: 'POST',
-                    body: formData
-                });
-        
-                console.log('Response:', response); // Add this debug log
-                
-                const result = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(result.detail || 'Analysis failed');
-                }
-                
-                if (result.success) {
-                    setResults(result.data);
-                } else {
-                    throw new Error(result.error || 'Unknown error occurred');
-                }
-            } catch (error) {
-                console.error('Detailed Error:', error); // Enhanced error logging
-                alert('Failed to analyze resume. Check console for details.');
-            } finally {
-                setLoading(false);
+            const response = await fetch('http://localhost:8001/analyze-resume', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                setResults(result.data);
+            } else {
+                throw new Error(result.error || 'Unknown error occurred');
             }
-        };
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to analyze resume. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="max-w-4xl mx-auto p-6">
             <h1 className="text-3xl font-bold mb-8 text-center">Resume Analyzer</h1>
+            
+            {/* Role Selection */}
+            <div className="mb-6 p-6 border rounded-lg bg-white shadow-sm">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Role
+                </label>
+                <select
+                    value={selectedRole}
+                    onChange={handleRoleChange}
+                    className="block w-full p-2 border rounded-md"
+                >
+                    {Object.entries(roles).map(([value, label]) => (
+                        <option key={value} value={value}>
+                            {label}
+                        </option>
+                    ))}
+                </select>
+            </div>
             
             {/* File Upload Section */}
             <div className="mb-8 p-6 border rounded-lg bg-white shadow-sm">
                 <input
                     type="file"
                     onChange={handleFileUpload}
-                    accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    accept=".pdf,.docx"
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 />
                 <button
@@ -85,6 +91,12 @@ const ResumeAnalyzer = () => {
             {/* Results Section */}
             {results && (
                 <div className="space-y-6">
+                    {/* Role Information */}
+                    <div className="p-6 border rounded-lg bg-white shadow-sm">
+                        <h2 className="text-xl font-semibold mb-2">Selected Role</h2>
+                        <p className="text-lg text-gray-700">{roles[selectedRole]}</p>
+                    </div>
+
                     {/* Match Score */}
                     <div className="p-6 border rounded-lg bg-white shadow-sm">
                         <h2 className="text-xl font-semibold mb-4">Match Score</h2>
@@ -111,6 +123,18 @@ const ResumeAnalyzer = () => {
                             ))}
                         </div>
                     </div>
+
+                    {/* Role-specific Advice */}
+                    {results.recommendations.role_specific_advice && (
+                        <div className="p-6 border rounded-lg bg-white shadow-sm">
+                            <h2 className="text-xl font-semibold mb-4">Role-Specific Advice</h2>
+                            <ul className="list-disc list-inside text-gray-600">
+                                {results.recommendations.role_specific_advice.map((advice, index) => (
+                                    <li key={index}>{advice}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     {/* Recommendations */}
                     <div className="p-6 border rounded-lg bg-white shadow-sm">

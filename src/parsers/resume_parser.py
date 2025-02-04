@@ -14,34 +14,55 @@ class ResumeParser:
                 "tools": []
             }
         }
+        # Move skill_patterns to be a class attribute
+        self.skill_patterns = {
+            "technical_skills": [
+                # AI Implementation Skills
+                "python", "machine learning", "ai", "artificial intelligence",
+                "data analysis", "deep learning", "sql", "programming",
+                # Project Manager Skills
+                "project planning", "reporting", "process improvement",
+                "risk management", "agile", "analytics", "scrum",
+                "project delivery", "budget management"
+            ],
+            "soft_skills": [
+                # Common Skills
+                "leadership", "communication", "project management",
+                # Project Manager Specific
+                "stakeholder management", "team management",
+                "problem solving", "mentoring", "team leadership",
+                "agile methodologies", "cross-functional"
+            ],
+            "tools": [
+                # AI Tools
+                "tensorflow", "pytorch", "git", "docker", "github",
+                # PM Tools
+                "jira", "ms project", "excel", "powerpoint",
+                "confluence", "slack", "microsoft project"
+            ]
+        }
 
     def parse(self) -> Dict:
         self.text = self.extract_text().lower()  # Convert to lowercase for better matching
         
-        print("Extracted text, looking for skills...")
+        print("\n=== Parsed Text Sample ===")
+        print(self.text[:200])
         
-        # Define some basic skills to look for
-        skill_patterns = {
-            "technical_skills": [
-                "python", "machine learning", "ai", "artificial intelligence",
-                "data analysis", "deep learning", "sql", "programming"
-            ],
-            "soft_skills": [
-                "leadership", "communication", "project management",
-                "team", "training", "presentation"
-            ],
-            "tools": [
-                "tensorflow", "pytorch", "git", "docker", "github",
-                "jira", "kubernetes"
-            ]
-        }
+        print("\n=== Looking for Skills ===")
+        print("Searching for these skills:")
+        for category, skills in self.skill_patterns.items():
+            print(f"{category}: {skills}")
         
         # Look for skills in the text
-        for category, skills in skill_patterns.items():
+        for category, skills in self.skill_patterns.items():
             for skill in skills:
                 if skill in self.text:
                     self.parsed_data["skills"][category].append(skill)
                     print(f"Found {category}: {skill}")
+        
+        print("\n=== Skills Found Summary ===")
+        for category, skills in self.parsed_data["skills"].items():
+            print(f"{category}: {skills}")
         
         return self.parsed_data
 
