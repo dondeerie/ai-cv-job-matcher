@@ -1,0 +1,45 @@
+{
+    "technical_skills": [
+        "python",
+        "machine learning",
+        "deep learning",
+        "neural networks",
+        "ai",
+        "artificial intelligence",
+        "sql",
+        "data analysis",
+        "nlp",
+        "natural language processing",
+        "computer vision",
+        "api",
+        "cloud computing",
+        "docker",
+        "git"
+    ],
+    "soft_skills": [
+        "leadership",
+        "communication",
+        "project management",
+        "team management",
+        "problem solving",
+        "critical thinking",
+        "collaboration",
+        "presentation",
+        "training",
+        "mentoring",
+        "change management"
+    ],
+    "tools": [
+        "tensorflow",
+        "pytorch",
+        "scikit-learn",
+        "pandas",
+        "numpy",
+        "spacy",
+        "jupyter",
+        "vscode",
+        "github",
+        "jira",
+        "tableau"
+    ]
+}
